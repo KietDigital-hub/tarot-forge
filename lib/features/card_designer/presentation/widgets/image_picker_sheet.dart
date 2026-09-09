@@ -36,7 +36,7 @@ class ImagePickerSheet extends ConsumerWidget {
           Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Custom illustration "${file.name}" loaded!'),
+              content: Text('Đã tải hình minh họa "${file.name}"!'),
               backgroundColor: AppColors.goldDark,
             ),
           );
@@ -46,7 +46,7 @@ class ImagePickerSheet extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error selecting image: $e'),
+            content: Text('Lỗi khi chọn ảnh: $e'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -81,7 +81,7 @@ class ImagePickerSheet extends ConsumerWidget {
               Icon(Icons.image_outlined, color: gold, size: 20),
               const SizedBox(width: 8),
               Text(
-                'CARD ARTWORK',
+                'HÌNH ẢNH LÁ BÀI',
                 style: AppTypography.screenTitle(isDark: isDark),
               ),
             ],
@@ -115,7 +115,7 @@ class ImagePickerSheet extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'UPLOAD FROM DEVICE',
+                        'TẢI LÊN TỪ THIẾT BỊ',
                         style: TextStyle(
                           fontFamily: 'Cinzel',
                           fontSize: 13,
@@ -126,7 +126,7 @@ class ImagePickerSheet extends ConsumerWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'PNG, JPG or WEBP high-res artwork',
+                        'Ảnh chất lượng cao định dạng PNG, JPG hoặc WEBP',
                         style: TextStyle(
                           fontFamily: 'Outfit',
                           fontSize: 11,
@@ -144,7 +144,7 @@ class ImagePickerSheet extends ConsumerWidget {
 
           const SizedBox(height: 22),
           Text(
-            'BUNDLED TAROT ART GALLERY',
+            'THƯ VIỆN HÌNH ẢNH CÓ SẴN',
             style: AppTypography.sectionHeader(isDark: isDark),
           ),
           const SizedBox(height: 10),

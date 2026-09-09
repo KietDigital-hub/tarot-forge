@@ -54,7 +54,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
         setState(() => _isExporting = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Export error: $e'),
+            content: Text('Lỗi khi xuất file: $e'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -85,7 +85,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
         setState(() => _isExporting = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Save error: $e'),
+            content: Text('Lỗi khi lưu file: $e'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -120,14 +120,14 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
               Icon(Icons.print_outlined, color: gold, size: 24),
               const SizedBox(width: 10),
               Text(
-                'PRINT-READY EXPORT',
+                'XUẤT FILE SẴN SÀNG IN',
                 style: AppTypography.screenTitle(isDark: isDark),
               ),
             ],
           ),
           const SizedBox(height: 8),
           Text(
-            'Generate industry-compliant prepress files calibrated for commercial press or fine art printing.',
+            'Tạo file in ấn chuẩn công nghiệp, phù hợp cho in thương mại hoặc in nghệ thuật cao cấp.',
             style: AppTypography.body(isDark: isDark, fontSize: 13),
           ),
           const SizedBox(height: 18),
@@ -142,13 +142,13 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
             ),
             child: Column(
               children: [
-                _buildSpecRow('Standard Card Size', '${TarotConstants.trimWidthMm.toInt()} x ${TarotConstants.trimHeightMm.toInt()} mm (Rider-Waite)', isDark),
+                _buildSpecRow('Kích Thước Chuẩn', '${TarotConstants.trimWidthMm.toInt()} x ${TarotConstants.trimHeightMm.toInt()} mm (Rider-Waite)', isDark),
                 const Divider(height: 14, thickness: 0.5),
-                _buildSpecRow('Bleed Margin', '${TarotConstants.bleedMm.toInt()} mm on all sides', isDark),
+                _buildSpecRow('Lề Tràn (Bleed)', '${TarotConstants.bleedMm.toInt()} mm mọi phía', isDark),
                 const Divider(height: 14, thickness: 0.5),
-                _buildSpecRow('Bleed Canvas', '${TarotConstants.fullWidthWithBleedMm.toInt()} x ${TarotConstants.fullHeightWithBleedMm.toInt()} mm', isDark),
+                _buildSpecRow('Khung Tràn', '${TarotConstants.fullWidthWithBleedMm.toInt()} x ${TarotConstants.fullHeightWithBleedMm.toInt()} mm', isDark),
                 const Divider(height: 14, thickness: 0.5),
-                _buildSpecRow('Target Resolution', '${TarotConstants.printDpi} DPI (${TarotConstants.fullWidthPx300Dpi} x ${TarotConstants.fullHeightPx300Dpi} px)', isDark),
+                _buildSpecRow('Độ Phân Giải', '${TarotConstants.printDpi} DPI (${TarotConstants.fullWidthPx300Dpi} x ${TarotConstants.fullHeightPx300Dpi} px)', isDark),
               ],
             ),
           ),
@@ -159,7 +159,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              'Include Printer Crop Marks',
+              'Bao Gồm Dấu Cắt In Ấn',
               style: TextStyle(
                 fontFamily: 'Outfit',
                 fontSize: 13.5,
@@ -170,7 +170,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
               ),
             ),
             subtitle: Text(
-              'Corner crosshairs pointing exactly to 70x120mm trim edge',
+              'Dấu góc chỉ chính xác mép cắt 70x120mm',
               style: TextStyle(
                 fontFamily: 'Outfit',
                 fontSize: 11.5,
@@ -195,7 +195,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
                     CircularProgressIndicator(color: gold),
                     const SizedBox(height: 12),
                     Text(
-                      'Rendering 300 DPI Prepress PDF...',
+                      'Đang tạo file PDF 300 DPI...',
                       style: TextStyle(
                         fontFamily: 'Cinzel',
                         fontSize: 12,
@@ -212,7 +212,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
               child: ElevatedButton.icon(
                 onPressed: _handlePreviewAndPrint,
                 icon: const Icon(Icons.picture_as_pdf, size: 20),
-                label: const Text('PREVIEW & PRINT PDF'),
+                label: const Text('XEM TRƯỚC & IN PDF'),
               ),
             ),
             const SizedBox(height: 10),
@@ -221,7 +221,7 @@ class _ExportActionSheetState extends ConsumerState<ExportActionSheet> {
               child: OutlinedButton.icon(
                 onPressed: _handleShareSavePdf,
                 icon: const Icon(Icons.file_download_outlined, size: 18),
-                label: const Text('SAVE / SHARE PDF FILE'),
+                label: const Text('LƯU / CHIA SẺ FILE PDF'),
               ),
             ),
           ],

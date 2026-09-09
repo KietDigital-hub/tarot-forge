@@ -1,4 +1,4 @@
-/// Major Arcana presets with archetypal names, Roman numerals, and default keywords.
+/// Major Arcana presets with archetypal names, Roman numerals, and default keywords in Vietnamese.
 class TarotPreset {
   final String romanNumeral;
   final String name;
@@ -19,20 +19,20 @@ class TarotDeckData {
   static const List<TarotPreset> samplePresets = [
     TarotPreset(
       romanNumeral: 'XVII',
-      name: 'THE STAR',
-      keywords: 'Hope • Inspiration • Serenity',
+      name: 'NGÔI SAO',
+      keywords: 'Hy Vọng • Khát Vọng • An Bình',
       assetImagePath: 'assets/images/the_star.jpg',
     ),
     TarotPreset(
       romanNumeral: 'I',
-      name: 'THE MAGICIAN',
-      keywords: 'Manifestation • Willpower • Creation',
+      name: 'PHÁP SƯ',
+      keywords: 'Ý Chí • Hiện Thực Hóa • Sáng Tạo',
       assetImagePath: 'assets/images/the_magician.jpg',
     ),
     TarotPreset(
       romanNumeral: 'XVIII',
-      name: 'THE MOON',
-      keywords: 'Illusion • Intuition • Subconscious',
+      name: 'MẶT TRĂNG',
+      keywords: 'Trực Giác • Ảo Ảnh • Tiềm Thức',
       assetImagePath: 'assets/images/the_moon.jpg',
     ),
   ];

@@ -77,7 +77,7 @@ class _CardTextEditorSheetState extends ConsumerState<CardTextEditorSheet> {
               Icon(Icons.edit_note, color: gold, size: 20),
               const SizedBox(width: 8),
               Text(
-                'CARD INSCRIPTION',
+                'NỘI DUNG LÁ BÀI',
                 style: AppTypography.screenTitle(isDark: isDark),
               ),
             ],
@@ -86,7 +86,7 @@ class _CardTextEditorSheetState extends ConsumerState<CardTextEditorSheet> {
 
           // Presets row
           Text(
-            'QUICK PRESETS',
+            'MẪU CÓ SẴN',
             style: AppTypography.sectionHeader(isDark: isDark),
           ),
           const SizedBox(height: 8),
@@ -132,8 +132,8 @@ class _CardTextEditorSheetState extends ConsumerState<CardTextEditorSheet> {
           // Roman Numeral field
           _buildTextField(
             controller: _numeralController,
-            label: 'ROMAN NUMERAL',
-            hint: 'e.g. XVII, 0, I, IX',
+            label: 'SỐ LA MÃ',
+            hint: 'VD: XVII, 0, I, IX',
             isDark: isDark,
             gold: gold,
             onChanged: (val) =>
@@ -144,8 +144,8 @@ class _CardTextEditorSheetState extends ConsumerState<CardTextEditorSheet> {
           // Card Name field
           _buildTextField(
             controller: _nameController,
-            label: 'CARD TITLE',
-            hint: 'e.g. THE STAR, THE FOOL, THE EMPRESS',
+            label: 'TÊN LÁ BÀI',
+            hint: 'VD: NGÔI SAO, KẺ NGỐC, NỮ HOÀNG',
             isDark: isDark,
             gold: gold,
             onChanged: (val) =>
@@ -156,8 +156,8 @@ class _CardTextEditorSheetState extends ConsumerState<CardTextEditorSheet> {
           // Subtitle / Keywords field
           _buildTextField(
             controller: _subtitleController,
-            label: 'KEYWORDS / MEANINGS',
-            hint: 'e.g. Hope • Inspiration • Renewal',
+            label: 'TỪ KHÓA / Ý NGHĨA',
+            hint: 'VD: Hy Vọng • Cảm Hứng • Tái Sinh',
             isDark: isDark,
             gold: gold,
             onChanged: (val) =>
@@ -170,7 +170,7 @@ class _CardTextEditorSheetState extends ConsumerState<CardTextEditorSheet> {
             child: ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.check, size: 18),
-              label: const Text('APPLY INSCRIPTION'),
+              label: const Text('ÁP DỤNG'),
             ),
           ),
         ],

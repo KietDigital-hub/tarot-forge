@@ -32,7 +32,7 @@ class CardDesignerScreen extends ConsumerWidget {
               style: AppTypography.screenTitle(isDark: isDark),
             ),
             Text(
-              '70 x 120 mm • 300 DPI PRINT STUDIO',
+              '70 x 120 mm • XƯỞNG IN 300 DPI',
               style: TextStyle(
                 fontFamily: 'Outfit',
                 fontSize: 9.5,
@@ -45,7 +45,7 @@ class CardDesignerScreen extends ConsumerWidget {
         actions: [
           // Dark / Light Mode Toggle
           IconButton(
-            tooltip: isDark ? 'Switch to Light Parchment' : 'Switch to Dark Void',
+            tooltip: isDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối',
             icon: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: Icon(
@@ -62,7 +62,7 @@ class CardDesignerScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              tooltip: 'Export Print-Ready PDF',
+              tooltip: 'Xuất PDF sẵn sàng in',
               icon: const Icon(Icons.picture_as_pdf_outlined),
               color: gold,
               onPressed: () => ExportActionSheet.show(context, isDark),
@@ -115,7 +115,7 @@ class CardDesignerScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            'Drag or hover to rotate physical 3D card',
+                            'Kéo hoặc di chuột để xoay lá bài 3D',
                             style: TextStyle(
                               fontFamily: 'Outfit',
                               fontSize: 11,
@@ -170,7 +170,7 @@ class CardDesignerScreen extends ConsumerWidget {
                           child: OutlinedButton.icon(
                             onPressed: () => CardTextEditorSheet.show(context, isDark),
                             icon: const Icon(Icons.edit_note, size: 18),
-                            label: const Text('INSCRIPTION'),
+                            label: const Text('VĂN BẢN'),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
@@ -183,7 +183,7 @@ class CardDesignerScreen extends ConsumerWidget {
                           child: OutlinedButton.icon(
                             onPressed: () => ImagePickerSheet.show(context, isDark),
                             icon: const Icon(Icons.photo_library_outlined, size: 18),
-                            label: const Text('ARTWORK'),
+                            label: const Text('HÌNH ẢNH'),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
@@ -196,7 +196,7 @@ class CardDesignerScreen extends ConsumerWidget {
                           child: ElevatedButton.icon(
                             onPressed: () => ExportActionSheet.show(context, isDark),
                             icon: const Icon(Icons.print_outlined, size: 18),
-                            label: const Text('EXPORT'),
+                            label: const Text('XUẤT FILE'),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),

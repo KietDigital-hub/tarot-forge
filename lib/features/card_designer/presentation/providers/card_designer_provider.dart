@@ -11,8 +11,8 @@ class CardDesignerNotifier extends Notifier<TarotCard> {
     return const TarotCard(
       id: 'active_card',
       romanNumeral: 'XVII',
-      name: 'THE STAR',
-      subtitle: 'Hope • Inspiration • Serenity',
+      name: 'NGÔI SAO',
+      subtitle: 'Hy Vọng • Khát Vọng • An Bình',
       templateId: 'classic_arcana',
       assetImagePath: 'assets/images/the_star.jpg',
     );

@@ -31,7 +31,7 @@ class TemplateSelectorBar extends ConsumerWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                'CARD TEMPLATE',
+                'MẪU LÁ BÀI',
                 style: AppTypography.sectionHeader(isDark: isDark),
               ),
             ],
