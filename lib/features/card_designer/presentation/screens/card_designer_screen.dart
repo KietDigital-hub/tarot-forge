@@ -10,6 +10,7 @@ import '../widgets/card_text_editor_sheet.dart';
 import '../widgets/export_action_sheet.dart';
 import '../widgets/image_picker_sheet.dart';
 import '../widgets/template_selector_bar.dart';
+import '../../../help/presentation/screens/help_guide_screen.dart';
 
 /// Primary screen for Phase 1: Interactive Tarot Card Designer.
 class CardDesignerScreen extends ConsumerWidget {
@@ -43,6 +44,18 @@ class CardDesignerScreen extends ConsumerWidget {
           ],
         ),
         actions: [
+          // Help / Usage Guide
+          IconButton(
+            tooltip: 'Hướng dẫn sử dụng',
+            icon: Icon(Icons.help_outline, color: gold),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => HelpGuideScreen(isDark: isDark),
+                ),
+              );
+            },
+          ),
           // Dark / Light Mode Toggle
           IconButton(
             tooltip: isDark ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối',
