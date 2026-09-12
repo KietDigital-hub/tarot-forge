@@ -26,11 +26,11 @@ class HelpGuideScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
           Text(
-            'Tarot Forge là công cụ tự thiết kế lá bài Tarot của riêng bạn — '
-            'nhập thông tin & sở thích của khách, chọn khung viền, viết nội '
-            'dung, chọn hoặc tạo hình minh họa bằng AI, rồi xuất ra file PDF '
-            'chuẩn in ấn thật. Bản demo hiện tại thiết kế được 1 lá bài tại '
-            'một thời điểm.',
+            'Tarot Forge là công cụ tự thiết kế trọn bộ 78 lá bài Tarot của '
+            'riêng bạn — nhập thông tin & sở thích của khách, thiết kế mặt '
+            'trước lẫn mặt sau lá bài, chọn hoặc tạo hình minh họa bằng AI, '
+            'rồi xuất ra file PDF chuẩn in ấn công nghiệp (kể cả in hàng '
+            'loạt 2 mặt cho cả bộ).',
             style: AppTypography.body(isDark: isDark, fontSize: 14),
           ),
           const SizedBox(height: 10),
@@ -38,12 +38,14 @@ class HelpGuideScreen extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: const [
+              _SpecTag(text: '78 LÁ BÀI'),
               _SpecTag(text: '70 × 120 MM'),
               _SpecTag(text: 'BLEED 3 MM'),
               _SpecTag(text: '300 DPI'),
               _SpecTag(text: '4 MẪU KHUNG'),
               _SpecTag(text: '20 PHONG CÁCH'),
               _SpecTag(text: '12 TÔNG MÀU'),
+              _SpecTag(text: 'IN 2 MẶT'),
             ],
           ),
           const SizedBox(height: 28),
@@ -60,9 +62,16 @@ class HelpGuideScreen extends StatelessWidget {
                   'chọn 1 trong 20 PHONG CÁCH NGHỆ THUẬT yêu thích (Huyền '
                   'Bí, Cổ Điển, Gothic, Ai Cập, Thiên Hà, Cyberpunk...), '
                   'chọn 1 trong 12 TÔNG MÀU SẮC chủ đạo, và CHỦ ĐỀ HÌNH '
-                  'TƯỢNG mong muốn. Đổi phong cách hoặc đổi màu đều sẽ cho '
-                  'ra lá bài gợi ý khác nhau — không bị lặp lại y hệt nhau.',
+                  'TƯỢNG mong muốn.',
                   style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Mỗi phong cách có tranh minh họa riêng biệt (không lặp '
+                  'lại), và tông màu bạn chọn sẽ ngay lập tức nhuộm màu '
+                  'giao diện toàn bộ màn hình Thiết Kế Lá Bài ở bước sau '
+                  '(nút bấm, viền khung, thanh tiêu đề...).',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
                 ),
                 const SizedBox(height: 6),
                 Text(
@@ -87,20 +96,68 @@ class HelpGuideScreen extends StatelessWidget {
 
           _StepTile(
             number: 2,
-            title: 'Chọn mẫu khung lá bài',
+            title: 'Duyệt & quản lý trọn bộ 78 lá',
             isDark: isDark,
-            child: Text(
-              'Thanh cuộn ngang phía dưới màn hình chính có 4 phong cách '
-              'khung viền — chạm để chọn, lá bài ở giữa cập nhật ngay lập '
-              'tức: Cổ Điển Huyền Bí, Thiên Thể Huyền Diệu, Giả Kim Tối '
-              'Giản, Nghệ Thuật Toàn Khung. Bấm vào thanh "Bộ bài: ..." ở '
-              'trên cùng nếu muốn quay lại sửa hồ sơ khách hàng.',
-              style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Bấm biểu tượng lưới ở góc trên bên trái màn hình Thiết '
+                  'Kế Lá Bài để mở KHO 78 LÁ BÀI: 22 Ẩn Chính + 56 Ẩn Phụ '
+                  '(Gậy 🔥, Chén 💧, Kiếm 💨, Tiền 🌍) theo đúng hệ Rider-'
+                  'Waite. Có ô tìm kiếm theo tên/số La Mã, các nút lọc theo '
+                  'nhóm chất, và lọc riêng "Đã Tùy Biến" để xem lá nào đã '
+                  'chỉnh sửa.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Thẻ tiến độ ở đầu trang cho biết đã hoàn thiện bao nhiêu '
+                  'trên 78 lá. Chạm vào 1 lá bất kỳ trong lưới để mở thẳng '
+                  'lá đó vào màn hình thiết kế.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
+                ),
+              ],
             ),
           ),
 
           _StepTile(
             number: 3,
+            title: 'Chọn mẫu khung & lật xem mặt sau',
+            isDark: isDark,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Thanh cuộn ngang phía dưới màn hình chính có 4 phong '
+                  'cách khung viền — chạm để chọn, lá bài ở giữa cập nhật '
+                  'ngay lập tức: Cổ Điển Huyền Bí, Thiên Thể Huyền Diệu, '
+                  'Giả Kim Tối Giản, Nghệ Thuật Toàn Khung.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Dùng nút mũi tên trái/phải để lướt nhanh qua các lá '
+                  'trong bộ mà không cần quay lại Kho 78 lá. Bấm biểu tượng '
+                  'lật (flip) để xem/chỉnh MẶT SAU lá bài — chọn 1 trong 4 '
+                  'họa tiết đối xứng (Hoa Sự Sống, La Bàn Thiên Thể, Ấn Ký '
+                  'Ouroboros, Nhật Nguyệt Đối Xứng) hoặc tự tải/tạo tranh '
+                  'riêng, cùng màu nhũ kim loại yêu thích. Có nút "ÁP DỤNG '
+                  'CHO TOÀN BỘ 78 LÁ BÀI" để đồng bộ 1 mặt sau cho cả bộ.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Bấm vào thanh "Bộ bài: ..." ở trên cùng nếu muốn quay '
+                  'lại sửa hồ sơ khách hàng.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
+                ),
+              ],
+            ),
+          ),
+
+          _StepTile(
+            number: 4,
             title: 'Viết nội dung lá bài',
             isDark: isDark,
             child: Column(
@@ -125,7 +182,7 @@ class HelpGuideScreen extends StatelessWidget {
           ),
 
           _StepTile(
-            number: 4,
+            number: 5,
             title: 'Chọn hoặc tạo hình minh họa bằng AI',
             isDark: isDark,
             child: Column(
@@ -157,22 +214,28 @@ class HelpGuideScreen extends StatelessWidget {
           ),
 
           _StepTile(
-            number: 5,
-            title: 'Xuất file in PDF',
+            number: 6,
+            title: 'Xuất file in PDF — 1 lá hoặc cả bộ',
             isDark: isDark,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Bấm biểu tượng PDF trên thanh tiêu đề hoặc nút XUẤT FILE '
-                  '— bảng thông số in ấn hiện ra: 70×120mm, bleed 3mm, 300 '
-                  'DPI, có thể bật/tắt dấu cắt in ấn.',
+                  'Bấm biểu tượng PDF trên thanh tiêu đề để mở bảng XUẤT '
+                  'FILE IN ẤN CÔNG NGHIỆP: PDF Vector 300 DPI, khổ 70×120mm '
+                  '+ 3mm bleed.',
                   style: AppTypography.body(isDark: isDark, fontSize: 13.5),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
+                _FieldRow(label: 'PHẠM VI', desc: 'Lá hiện tại, Bộ Ẩn Chính (22 lá), Các lá đã tùy biến, hoặc Trọn Bộ Bài (78 lá).', isDark: isDark, gold: gold),
+                _FieldRow(label: 'CROP MARKS', desc: 'Bật/tắt dấu chữ thập 4 góc chuẩn nhà in offset/laser.', isDark: isDark, gold: gold),
+                _FieldRow(label: 'IN 2 MẶT', desc: 'Bật DUPLEX để mỗi trang mặt trước kèm 1 trang mặt sau tương ứng, sẵn sàng nạp máy in 2 mặt.', isDark: isDark, gold: gold),
+                const SizedBox(height: 8),
                 Text(
-                  'XEM TRƯỚC & IN PDF để in trực tiếp, hoặc LƯU / CHIA SẺ '
-                  'FILE PDF để tải file gửi nhà in.',
+                  'XEM & IN NGAY để in trực tiếp, hoặc LƯU / CHIA SẺ để tải '
+                  'file PDF gửi nhà in. Xuất cả 78 lá sẽ mất nhiều thời gian '
+                  'hơn xuất 1 lá, cứ để app xử lý xong không tắt app giữa '
+                  'chừng.',
                   style: AppTypography.body(isDark: isDark, fontSize: 12.5),
                 ),
               ],
@@ -180,7 +243,7 @@ class HelpGuideScreen extends StatelessWidget {
           ),
 
           _StepTile(
-            number: 6,
+            number: 7,
             title: 'Xoay xem 3D & đổi giao diện',
             isDark: isDark,
             child: Text(
@@ -206,15 +269,16 @@ class HelpGuideScreen extends StatelessWidget {
                   children: [
                     Icon(Icons.info_outline, size: 16, color: gold),
                     const SizedBox(width: 8),
-                    Text('ĐÂY LÀ BẢN DEMO PHASE 1', style: AppTypography.sectionHeader(isDark: isDark)),
+                    Text('ĐÂY LÀ BẢN DEMO PHASE 1 + 2', style: AppTypography.sectionHeader(isDark: isDark)),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Chưa có trong bản này, sẽ bổ sung sau: quản lý trọn bộ '
-                  '78 lá cùng lúc, tài khoản đăng nhập & đồng bộ nhiều '
-                  'thiết bị, gói trả phí / mua credit AI. Mỗi lần gọi tạo '
-                  'ảnh AI dùng hạn mức miễn phí của chính API key bạn nhập.',
+                  'Chưa có trong bản này, sẽ bổ sung sau: thiết kế hộp đựng '
+                  'bài (tuck box), sách hướng dẫn giải nghĩa 78 lá, tài '
+                  'khoản đăng nhập & đồng bộ nhiều thiết bị, gói trả phí / '
+                  'mua credit AI. Mỗi lần gọi tạo ảnh AI dùng hạn mức miễn '
+                  'phí của chính API key bạn nhập.',
                   style: AppTypography.body(isDark: isDark, fontSize: 12.5),
                 ),
               ],
