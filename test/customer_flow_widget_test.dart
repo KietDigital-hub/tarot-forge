@@ -29,6 +29,8 @@ void main() {
 
       final royalChip = find.text('Hoàng gia');
       expect(royalChip, findsOneWidget);
+      await tester.ensureVisible(royalChip);
+      await tester.pumpAndSettle();
       await tester.tap(royalChip);
       await tester.pumpAndSettle();
 
@@ -64,6 +66,8 @@ void main() {
 
       final natureChip = find.text('Thiên nhiên');
       expect(natureChip, findsOneWidget);
+      await tester.ensureVisible(natureChip);
+      await tester.pumpAndSettle();
       await tester.tap(natureChip);
       await tester.pumpAndSettle();
 
@@ -98,6 +102,8 @@ void main() {
 
       final classicChip = find.text('Cổ điển');
       expect(classicChip, findsOneWidget);
+      await tester.ensureVisible(classicChip);
+      await tester.pumpAndSettle();
       await tester.tap(classicChip);
       await tester.pumpAndSettle();
 
@@ -132,6 +138,8 @@ void main() {
 
       final mysticChip = find.text('Huyền bí');
       expect(mysticChip, findsOneWidget);
+      await tester.ensureVisible(mysticChip);
+      await tester.pumpAndSettle();
       await tester.tap(mysticChip);
       await tester.pumpAndSettle();
 
@@ -166,6 +174,8 @@ void main() {
 
       final minimalChip = find.text('Tối giản');
       expect(minimalChip, findsOneWidget);
+      await tester.ensureVisible(minimalChip);
+      await tester.pumpAndSettle();
       await tester.tap(minimalChip);
       await tester.pumpAndSettle();
 
@@ -195,6 +205,14 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
+      // Expand advanced section to reveal note
+      final advancedToggle = find.text('TÙY CHỈNH NÂNG CAO');
+      expect(advancedToggle, findsOneWidget);
+      await tester.ensureVisible(advancedToggle);
+      await tester.pumpAndSettle();
+      await tester.tap(advancedToggle);
+      await tester.pumpAndSettle();
+
       final noteFinder = find.text(
         '(Lưu ý: nội dung này chỉ ảnh hưởng đến ảnh khi bạn đã gắn API key AI ở bước sau — chưa gắn API key thì ghi gì cũng chưa có tác dụng)',
       );
@@ -216,13 +234,15 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Select Gothic tối
+      // Select Gothic tối popular card
       final gothicChip = find.text('Gothic tối');
       expect(gothicChip, findsOneWidget);
+      await tester.ensureVisible(gothicChip);
+      await tester.pumpAndSettle();
       await tester.tap(gothicChip);
       await tester.pumpAndSettle();
 
-      // Select color Đen Tuyền & Đỏ Máu
+      // Select color Đen Tuyền & Đỏ Máu from popular card
       final colorItem = find.text('Đen Tuyền & Đỏ Máu');
       expect(colorItem, findsOneWidget);
       await tester.ensureVisible(colorItem);
@@ -263,6 +283,14 @@ void main() {
           ),
         ),
       );
+      await tester.pumpAndSettle();
+
+      // Expand advanced section to access full 12 color palettes
+      final advancedToggle = find.text('TÙY CHỈNH NÂNG CAO');
+      expect(advancedToggle, findsOneWidget);
+      await tester.ensureVisible(advancedToggle);
+      await tester.pumpAndSettle();
+      await tester.tap(advancedToggle);
       await tester.pumpAndSettle();
 
       // Select color Bạc Tinh Tú & Xanh Băng

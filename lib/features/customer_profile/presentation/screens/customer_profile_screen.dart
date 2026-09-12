@@ -32,9 +32,73 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
   late String _selectedTheme;
 
   bool _isLoading = false;
+  bool _isAdvancedExpanded = false;
 
   late AnimationController _glowController;
   late Animation<double> _glowAnimation;
+
+  final List<Map<String, dynamic>> _popularOptions = const [
+    {
+      'style': 'Huyền bí',
+      'color': 'Vàng Kim & Chàm Tím',
+      'theme': 'Thiên văn & Tinh tú',
+      'icon': '🔮',
+      'title': 'Huyền bí',
+      'subtitle': 'Chiêm tinh & Ma thuật',
+      'colors': [Color(0xFF2A1B3D), Color(0xFFD4AF37)],
+      'assetImage': 'assets/images/the_moon.jpg',
+    },
+    {
+      'style': 'Cổ điển',
+      'color': 'Xanh Ngọc & Đồng Cổ',
+      'theme': 'Thần thoại cổ đại',
+      'icon': '📜',
+      'title': 'Cổ điển',
+      'subtitle': 'Khắc gỗ Rider-Waite',
+      'colors': [Color(0xFF133B3E), Color(0xFFC29B38)],
+      'assetImage': 'assets/images/the_magician.jpg',
+    },
+    {
+      'style': 'Hoàng gia',
+      'color': 'Đỏ Nhung & Đen Huyền',
+      'theme': 'Thiên thần & Thánh tích',
+      'icon': '👑',
+      'title': 'Hoàng gia',
+      'subtitle': 'Dát vàng & Vương giả',
+      'colors': [Color(0xFF4A1828), Color(0xFFB33939)],
+      'assetImage': 'assets/images/the_emperor.jpg',
+    },
+    {
+      'style': 'Thiên nhiên',
+      'color': 'Xanh Lục Rừng & Nâu Gỗ',
+      'theme': 'Hoa lá & Thảo mộc',
+      'icon': '🌿',
+      'title': 'Thiên nhiên',
+      'subtitle': 'Cỏ cây & Muông thú',
+      'colors': [Color(0xFF2D5A27), Color(0xFF5C4033)],
+      'assetImage': 'assets/images/the_empress.jpg',
+    },
+    {
+      'style': 'Tối giản',
+      'color': 'Trắng Ngà & Vàng Nhạt',
+      'theme': 'Thiên văn & Tinh tú',
+      'icon': '📐',
+      'title': 'Tối giản',
+      'subtitle': 'Đường nét thanh khiết',
+      'colors': [Color(0xFFF4F1DE), Color(0xFFE9C46A)],
+      'assetImage': 'assets/images/the_star.jpg',
+    },
+    {
+      'style': 'Gothic tối',
+      'color': 'Đen Tuyền & Đỏ Máu',
+      'theme': 'Phù thủy & Huyền thuật',
+      'icon': '🦇',
+      'title': 'Gothic tối',
+      'subtitle': 'Bóng tối & Ánh nến ma mị',
+      'colors': [Color(0xFF0D0D0D), Color(0xFF8A0303)],
+      'assetImage': 'assets/images/gothic_dark.jpg',
+    },
+  ];
 
   final List<Map<String, String>> _styleOptions = const [
     {'name': 'Huyền bí', 'icon': '🔮', 'desc': 'Biểu tượng chiêm tinh & ma thuật'},
@@ -581,256 +645,24 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
 
                 const SizedBox(height: 24),
 
-                // 2. Phong cách bài Tarot yêu thích
-                _buildSectionTitle(
-                  icon: Icons.style_outlined,
-                  title: 'PHONG CÁCH NGHỆ THUẬT YÊU THÍCH',
-                  gold: gold,
-                  isDark: isDark,
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _styleOptions.map((opt) {
-                    final isSelected = _selectedStyle == opt['name'];
-                    return AnimatedScale(
-                      scale: isSelected ? 1.04 : 1.0,
-                      duration: const Duration(milliseconds: 160),
-                      curve: Curves.easeOutBack,
-                      child: ChoiceChip(
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          if (selected) setState(() => _selectedStyle = opt['name']!);
-                        },
-                        avatar: Text(opt['icon']!, style: const TextStyle(fontSize: 14)),
-                        label: Text(
-                          opt['name']!,
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected
-                                ? (isDark ? AppColors.darkBackground : Colors.white)
-                                : (isDark
-                                    ? AppColors.darkTextPrimary
-                                    : AppColors.lightTextPrimary),
-                          ),
-                        ),
-                        selectedColor: gold,
-                        backgroundColor: isDark
-                            ? AppColors.darkSurfaceVariant
-                            : AppColors.lightSurfaceVariant,
-                        side: BorderSide(
-                          color: isSelected ? gold : gold.withValues(alpha: 0.25),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                // 2. Gợi ý phong cách phổ biến (Dạng thẻ lớn dễ chọn)
+                _buildPopularSection(gold, isDark),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
 
-                // 3. Tông màu chủ đạo
-                _buildSectionTitle(
-                  icon: Icons.palette_outlined,
-                  title: 'TÔNG MÀU SẮC CHỦ ĐẠO',
-                  gold: gold,
-                  isDark: isDark,
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  children: _colorOptions.map((opt) {
-                    final isSelected = _selectedColor == opt['name'];
-                    final List<Color> colors = opt['colors'] as List<Color>;
+                // Huy hiệu tóm tắt phong cách & màu sắc đang chọn
+                _buildSelectedSummaryBadge(gold, isDark),
 
-                    return AnimatedScale(
-                      scale: isSelected ? 1.02 : 1.0,
-                      duration: const Duration(milliseconds: 160),
-                      curve: Curves.easeOutBack,
-                      child: InkWell(
-                        onTap: () => setState(() => _selectedColor = opt['name'] as String),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? gold.withValues(alpha: 0.12)
-                                : (isDark
-                                    ? AppColors.darkSurfaceVariant
-                                    : AppColors.lightSurfaceVariant),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected ? gold : gold.withValues(alpha: 0.2),
-                              width: isSelected ? 1.8 : 1.0,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              // Color swatch circles
-                              Row(
-                                children: colors.map((c) {
-                                  return Container(
-                                    width: 22,
-                                    height: 22,
-                                    margin: const EdgeInsets.only(right: 6),
-                                    decoration: BoxDecoration(
-                                      color: c,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white24),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      opt['name'] as String,
-                                      style: TextStyle(
-                                        fontFamily: 'Outfit',
-                                        fontSize: 13,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w700
-                                            : FontWeight.w500,
-                                        color: isSelected
-                                            ? gold
-                                            : (isDark
-                                                ? AppColors.darkTextPrimary
-                                                : AppColors.lightTextPrimary),
-                                      ),
-                                    ),
-                                    Text(
-                                      opt['desc'] as String,
-                                      style: TextStyle(
-                                        fontFamily: 'Outfit',
-                                        fontSize: 11,
-                                        color: isDark
-                                            ? AppColors.darkTextMuted
-                                            : AppColors.lightTextMuted,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (isSelected)
-                                Icon(Icons.check_circle, color: gold, size: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                const SizedBox(height: 20),
 
-                const SizedBox(height: 24),
+                // 3. Nút tùy chỉnh nâng cao (Thu gọn mặc định)
+                _buildAdvancedToggle(gold, isDark),
 
-                // 4. Chủ đề mong muốn
-                _buildSectionTitle(
-                  icon: Icons.flare_outlined,
-                  title: 'CHỦ ĐỀ HÌNH TƯỢNG MONG MUỐN',
-                  gold: gold,
-                  isDark: isDark,
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _themeOptions.map((opt) {
-                    final isSelected = _selectedTheme == opt['name'];
-                    return AnimatedScale(
-                      scale: isSelected ? 1.04 : 1.0,
-                      duration: const Duration(milliseconds: 160),
-                      curve: Curves.easeOutBack,
-                      child: ChoiceChip(
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          if (selected) setState(() => _selectedTheme = opt['name']!);
-                        },
-                        avatar: Text(opt['icon']!, style: const TextStyle(fontSize: 14)),
-                        label: Text(
-                          opt['name']!,
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected
-                                ? (isDark ? AppColors.darkBackground : Colors.white)
-                                : (isDark
-                                    ? AppColors.darkTextPrimary
-                                    : AppColors.lightTextPrimary),
-                          ),
-                        ),
-                        selectedColor: gold,
-                        backgroundColor: isDark
-                            ? AppColors.darkSurfaceVariant
-                            : AppColors.lightSurfaceVariant,
-                        side: BorderSide(
-                          color: isSelected ? gold : gold.withValues(alpha: 0.25),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-
-                const SizedBox(height: 24),
-
-                // 5. Ghi chú & Ý niệm riêng
-                _buildSectionTitle(
-                  icon: Icons.note_alt_outlined,
-                  title: 'GHI CHÚ & TÂM NIỆM RIÊNG (TÙY CHỌN)',
-                  gold: gold,
-                  isDark: isDark,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '(Lưu ý: nội dung này chỉ ảnh hưởng đến ảnh khi bạn đã gắn API key AI ở bước sau — chưa gắn API key thì ghi gì cũng chưa có tác dụng)',
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 11.5,
-                    fontStyle: FontStyle.italic,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _notesController,
-                  maxLines: 3,
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 13,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Nhập tâm niệm của bạn (VD: Muốn bộ bài chữa lành, tặng người yêu, tông màu ấm áp...)',
-                    hintStyle: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 12,
-                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
-                    ),
-                    filled: true,
-                    fillColor: isDark
-                        ? AppColors.darkSurfaceVariant
-                        : AppColors.lightSurfaceVariant,
-                    contentPadding: const EdgeInsets.all(14),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: gold.withValues(alpha: 0.3)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: gold.withValues(alpha: 0.3)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: gold, width: 1.5),
-                    ),
-                  ),
-                ),
+                // Nội dung tùy chỉnh nâng cao (xổ ra khi được bấm)
+                if (_isAdvancedExpanded) ...[
+                  const SizedBox(height: 20),
+                  _buildAdvancedOptions(gold, isDark),
+                ],
 
                 const SizedBox(height: 32),
 
@@ -906,6 +738,557 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
           style: AppTypography.sectionHeader(isDark: isDark),
         ),
       ],
+    );
+  }
+
+  /// Mục gợi ý 6 phong cách phổ biến dạng thẻ lớn kèm màu sắc phối sẵn
+  Widget _buildPopularSection(Color gold, bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(
+          icon: Icons.auto_awesome,
+          title: 'GỢI Ý PHONG CÁCH PHỔ BIẾN',
+          gold: gold,
+          isDark: isDark,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Chọn nhanh 1 phong cách tiêu biểu kèm tông màu được phối sẵn hài hòa:',
+          style: TextStyle(
+            fontFamily: 'Outfit',
+            fontSize: 12,
+            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+          ),
+        ),
+        const SizedBox(height: 12),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.78,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+          ),
+          itemCount: _popularOptions.length,
+          itemBuilder: (context, index) {
+            final opt = _popularOptions[index];
+            final isSelected = _selectedStyle == opt['style'] && _selectedColor == opt['color'];
+            final List<Color> colors = opt['colors'] as List<Color>;
+
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  _selectedStyle = opt['style'] as String;
+                  _selectedColor = opt['color'] as String;
+                  _selectedTheme = opt['theme'] as String;
+                });
+              },
+              borderRadius: BorderRadius.circular(14),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutCubic,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? gold.withValues(alpha: isDark ? 0.16 : 0.10)
+                      : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isSelected ? gold : gold.withValues(alpha: 0.25),
+                    width: isSelected ? 2.0 : 1.0,
+                  ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: gold.withValues(alpha: isDark ? 0.22 : 0.12),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Card Artwork Thumbnail with Badges
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 105,
+                            child: Image.asset(
+                              opt['assetImage'] as String,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 6,
+                          left: 6,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.70),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              opt['icon'] as String,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        if (isSelected)
+                          Positioned(
+                            top: 6,
+                            right: 6,
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: gold,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                size: 13,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Title
+                    Text(
+                      opt['title'] as String,
+                      style: TextStyle(
+                        fontFamily: 'Cinzel',
+                        fontSize: 12.5,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        color: isSelected
+                            ? gold
+                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+
+                    // Subtitle
+                    Text(
+                      opt['subtitle'] as String,
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 10.5,
+                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+
+                    // Color Preview Dots & Color Name
+                    Row(
+                      children: [
+                        ...colors.map((c) => Container(
+                          width: 12,
+                          height: 12,
+                          margin: const EdgeInsets.only(right: 4),
+                          decoration: BoxDecoration(
+                            color: c,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white38, width: 0.8),
+                          ),
+                        )),
+                        const SizedBox(width: 2),
+                        Expanded(
+                          child: Text(
+                            opt['color'] as String,
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: isSelected
+                                  ? gold
+                                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  /// Huy hiệu tóm tắt phong cách và màu sắc đang được chọn
+  Widget _buildSelectedSummaryBadge(Color gold, bool isDark) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+      decoration: BoxDecoration(
+        color: gold.withValues(alpha: isDark ? 0.10 : 0.06),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: gold.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.check_circle_outline, size: 16, color: gold),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Đang chọn: $_selectedStyle • $_selectedColor',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Nút bấm mở rộng / thu gọn phần tùy chỉnh nâng cao
+  Widget _buildAdvancedToggle(Color gold, bool isDark) {
+    return InkWell(
+      onTap: () => setState(() => _isAdvancedExpanded = !_isAdvancedExpanded),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _isAdvancedExpanded ? gold : gold.withValues(alpha: 0.25),
+            width: _isAdvancedExpanded ? 1.5 : 1.0,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _isAdvancedExpanded ? Icons.tune : Icons.tune_outlined,
+              color: gold,
+              size: 18,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'TÙY CHỈNH NÂNG CAO',
+                    style: TextStyle(
+                      fontFamily: 'Cinzel',
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.0,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _isAdvancedExpanded
+                        ? 'Thu gọn tùy chọn nâng cao'
+                        : 'Tự chọn riêng lẻ 20 phong cách, 12 tông màu, chủ đề & ghi chú',
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 11,
+                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              _isAdvancedExpanded
+                  ? Icons.keyboard_arrow_up_rounded
+                  : Icons.keyboard_arrow_down_rounded,
+              color: gold,
+              size: 22,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Danh sách tùy chọn đầy đủ xổ ra khi người dùng bấm TÙY CHỈNH NÂNG CAO
+  Widget _buildAdvancedOptions(Color gold, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.darkSurface.withValues(alpha: 0.8)
+            : AppColors.lightSurface.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: gold.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Phong cách nghệ thuật đầy đủ (20 phong cách)
+          _buildSectionTitle(
+            icon: Icons.style_outlined,
+            title: 'TẤT CẢ 20 PHONG CÁCH NGHỆ THUẬT',
+            gold: gold,
+            isDark: isDark,
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _styleOptions.map((opt) {
+              final isSelected = _selectedStyle == opt['name'];
+              return AnimatedScale(
+                scale: isSelected ? 1.04 : 1.0,
+                duration: const Duration(milliseconds: 160),
+                curve: Curves.easeOutBack,
+                child: ChoiceChip(
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) setState(() => _selectedStyle = opt['name']!);
+                  },
+                  avatar: Text(opt['icon']!, style: const TextStyle(fontSize: 14)),
+                  label: Text(
+                    opt['name']!,
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? (isDark ? AppColors.darkBackground : Colors.white)
+                          : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary),
+                    ),
+                  ),
+                  selectedColor: gold,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSurfaceVariant,
+                  side: BorderSide(
+                    color: isSelected ? gold : gold.withValues(alpha: 0.25),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 24),
+
+          // 2. Tông màu sắc chủ đạo đầy đủ (12 bảng màu)
+          _buildSectionTitle(
+            icon: Icons.palette_outlined,
+            title: 'TẤT CẢ 12 TÔNG MÀU SẮC CHỦ ĐẠO',
+            gold: gold,
+            isDark: isDark,
+          ),
+          const SizedBox(height: 10),
+          Column(
+            children: _colorOptions.map((opt) {
+              final isSelected = _selectedColor == opt['name'];
+              final List<Color> colors = opt['colors'] as List<Color>;
+
+              return AnimatedScale(
+                scale: isSelected ? 1.02 : 1.0,
+                duration: const Duration(milliseconds: 160),
+                curve: Curves.easeOutBack,
+                child: InkWell(
+                  onTap: () => setState(() => _selectedColor = opt['name'] as String),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? gold.withValues(alpha: 0.12)
+                          : (isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.lightSurfaceVariant),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? gold : gold.withValues(alpha: 0.2),
+                        width: isSelected ? 1.8 : 1.0,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        // Color swatch circles
+                        Row(
+                          children: colors.map((c) {
+                            return Container(
+                              width: 22,
+                              height: 22,
+                              margin: const EdgeInsets.only(right: 6),
+                              decoration: BoxDecoration(
+                                color: c,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white24),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                opt['name'] as String,
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 13,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: isSelected
+                                      ? gold
+                                      : (isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary),
+                                ),
+                              ),
+                              Text(
+                                opt['desc'] as String,
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 11,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (isSelected)
+                          Icon(Icons.check_circle, color: gold, size: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 24),
+
+          // 3. Chủ đề hình tượng mong muốn (5 chủ đề)
+          _buildSectionTitle(
+            icon: Icons.flare_outlined,
+            title: 'CHỦ ĐỀ HÌNH TƯỢNG MONG MUỐN',
+            gold: gold,
+            isDark: isDark,
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _themeOptions.map((opt) {
+              final isSelected = _selectedTheme == opt['name'];
+              return AnimatedScale(
+                scale: isSelected ? 1.04 : 1.0,
+                duration: const Duration(milliseconds: 160),
+                curve: Curves.easeOutBack,
+                child: ChoiceChip(
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) setState(() => _selectedTheme = opt['name']!);
+                  },
+                  avatar: Text(opt['icon']!, style: const TextStyle(fontSize: 14)),
+                  label: Text(
+                    opt['name']!,
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? (isDark ? AppColors.darkBackground : Colors.white)
+                          : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary),
+                    ),
+                  ),
+                  selectedColor: gold,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSurfaceVariant,
+                  side: BorderSide(
+                    color: isSelected ? gold : gold.withValues(alpha: 0.25),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 24),
+
+          // 4. Ghi chú & Ý niệm riêng
+          _buildSectionTitle(
+            icon: Icons.note_alt_outlined,
+            title: 'GHI CHÚ & TÂM NIỆM RIÊNG (TÙY CHỌN)',
+            gold: gold,
+            isDark: isDark,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '(Lưu ý: nội dung này chỉ ảnh hưởng đến ảnh khi bạn đã gắn API key AI ở bước sau — chưa gắn API key thì ghi gì cũng chưa có tác dụng)',
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 11.5,
+              fontStyle: FontStyle.italic,
+              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _notesController,
+            maxLines: 3,
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 13,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            decoration: InputDecoration(
+              hintText: 'Nhập tâm niệm của bạn (VD: Muốn bộ bài chữa lành, tặng người yêu, tông màu ấm áp...)',
+              hintStyle: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 12,
+                color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+              ),
+              filled: true,
+              fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+              contentPadding: const EdgeInsets.all(14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: gold.withValues(alpha: 0.3)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: gold.withValues(alpha: 0.3)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: gold, width: 1.5),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

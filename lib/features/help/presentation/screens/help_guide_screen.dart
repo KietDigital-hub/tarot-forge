@@ -48,7 +48,30 @@ class HelpGuideScreen extends StatelessWidget {
               _SpecTag(text: 'IN 2 MẶT'),
             ],
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: surface,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: gold.withValues(alpha: 0.25)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.home_outlined, size: 16, color: gold),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Mở app là vào thẳng màn hình HOME — từ đây có thể bắt '
+                    'đầu thiết kế bộ bài mới, xem KHO 78 LÁ BÀI, hoặc mở '
+                    'HƯỚNG DẪN này bất cứ lúc nào.',
+                    style: AppTypography.body(isDark: isDark, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
 
           _StepTile(
             number: 1,
@@ -58,19 +81,22 @@ class HelpGuideScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Đây là màn hình đầu tiên khi mở app. Nhập tên khách hàng, '
-                  'chọn 1 trong 20 PHONG CÁCH NGHỆ THUẬT yêu thích (Huyền '
-                  'Bí, Cổ Điển, Gothic, Ai Cập, Thiên Hà, Cyberpunk...), '
-                  'chọn 1 trong 12 TÔNG MÀU SẮC chủ đạo, và CHỦ ĐỀ HÌNH '
-                  'TƯỢNG mong muốn.',
+                  'Từ màn hình Home, bấm "BẮT ĐẦU THIẾT KẾ BỘ BÀI MỚI" để '
+                  'vào đây. Nhập tên khách hàng, sau đó chọn nhanh 1 trong '
+                  'mục GỢI Ý PHONG CÁCH PHỔ BIẾN — mỗi thẻ đã phối sẵn 1 '
+                  'phong cách + 1 tông màu hài hòa, chọn 1 cái là xong, '
+                  'không cần chỉnh gì thêm.',
                   style: AppTypography.body(isDark: isDark, fontSize: 13.5),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Mỗi phong cách có tranh minh họa riêng biệt (không lặp '
-                  'lại), và tông màu bạn chọn sẽ ngay lập tức nhuộm màu '
-                  'giao diện toàn bộ màn hình Thiết Kế Lá Bài ở bước sau '
-                  '(nút bấm, viền khung, thanh tiêu đề...).',
+                  'Muốn tự chọn chi tiết hơn (đủ 20 phong cách, 12 tông '
+                  'màu, 5 chủ đề hình tượng), bấm mở rộng mục TÙY CHỈNH '
+                  'NÂNG CAO ở cuối trang. Mỗi phong cách có tranh minh họa '
+                  'riêng biệt (không lặp lại), và tông màu bạn chọn sẽ '
+                  'ngay lập tức nhuộm màu giao diện toàn bộ màn hình Thiết '
+                  'Kế Lá Bài ở bước sau (nút bấm, viền khung, thanh tiêu '
+                  'đề...).',
                   style: AppTypography.body(isDark: isDark, fontSize: 12.5),
                 ),
                 const SizedBox(height: 6),
