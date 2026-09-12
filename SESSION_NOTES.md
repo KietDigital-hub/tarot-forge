@@ -52,3 +52,18 @@
   `windows/flutter/generated_plugin_registrant.{cc,h}` và
   `generated_plugins.cmake`. Vô hại (CMake tự ghi lại khi build) — có thể
   bỏ qua hoặc thêm vào `.gitignore` nếu thấy phiền.
+
+## Deploy web lên GitHub Pages
+
+- Link live: https://kietdigital-hub.github.io/tarot-forge/
+- Site nằm ở subpath `/tarot-forge/`, KHÔNG phải root domain — nên khi
+  build web LUÔN phải truyền `--base-href /tarot-forge/`, nếu không app
+  sẽ ra màn hình trắng (asset/script gọi sai đường dẫn, tưởng như đang
+  tải mãi không xong). Lệnh build đúng:
+  `flutter build web --release --base-href /tarot-forge/`
+  (trong Git Bash trên Windows, path `/tarot-forge/` có thể bị MSYS tự
+  convert thành đường dẫn ổ đĩa — nếu gặp lỗi đó thì chạy với
+  `MSYS_NO_PATHCONV=1` phía trước lệnh.)
+- Không có GitHub Actions tự động deploy — phải build tay rồi copy
+  `build/web/*` đè lên branch `gh-pages` (dùng `git worktree add` cho
+  gọn), commit, push. Nhớ giữ file `.nojekyll` ở gốc branch `gh-pages`.
