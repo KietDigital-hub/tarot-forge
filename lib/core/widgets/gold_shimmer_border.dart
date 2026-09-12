@@ -7,6 +7,8 @@ class GoldShimmerBorder extends StatefulWidget {
   final BorderRadius borderRadius;
   final double borderWidth;
   final bool enablePulse;
+  final Color? baseColor;
+  final Color? accentColor;
 
   const GoldShimmerBorder({
     super.key,
@@ -14,6 +16,8 @@ class GoldShimmerBorder extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(16)),
     this.borderWidth = 1.5,
     this.enablePulse = true,
+    this.baseColor,
+    this.accentColor,
   });
 
   @override
@@ -56,17 +60,21 @@ class _GoldShimmerBorderState extends State<GoldShimmerBorder>
 
   @override
   Widget build(BuildContext context) {
+    final primary = widget.baseColor ?? AppColors.goldPrimary;
+    final bright = widget.accentColor ?? AppColors.goldBright;
+    final dark = Color.lerp(primary, Colors.black, 0.45)!;
+
     if (!widget.enablePulse) {
       return Container(
         decoration: BoxDecoration(
           borderRadius: widget.borderRadius,
           border: Border.all(
-            color: AppColors.goldPrimary,
+            color: primary,
             width: widget.borderWidth,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.goldPrimary.withValues(alpha: 0.25),
+              color: primary.withValues(alpha: 0.25),
               blurRadius: 12,
               spreadRadius: 1,
             ),
@@ -85,7 +93,7 @@ class _GoldShimmerBorderState extends State<GoldShimmerBorder>
             borderRadius: widget.borderRadius,
             boxShadow: [
               BoxShadow(
-                color: AppColors.goldPrimary.withValues(
+                color: primary.withValues(
                   alpha: 0.20 + 0.15 * (1.0 + (child != null ? 0 : 0)),
                 ),
                 blurRadius: 16,
@@ -94,12 +102,12 @@ class _GoldShimmerBorderState extends State<GoldShimmerBorder>
             ],
             gradient: SweepGradient(
               transform: GradientRotation(angle),
-              colors: const [
-                AppColors.goldPrimary,
-                AppColors.goldBright,
-                AppColors.goldDark,
-                AppColors.goldBright,
-                AppColors.goldPrimary,
+              colors: [
+                primary,
+                bright,
+                dark,
+                bright,
+                primary,
               ],
             ),
           ),

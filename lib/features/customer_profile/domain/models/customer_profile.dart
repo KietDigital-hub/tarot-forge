@@ -1,4 +1,5 @@
 import '../../../../core/constants/tarot_deck_data.dart';
+import '../../../../core/theme/tarot_color_palette.dart';
 
 /// Định nghĩa mô hình thông tin khách hàng và sở thích thiết kế bộ bài Tarot.
 class CustomerProfile {
@@ -29,6 +30,9 @@ class CustomerProfile {
       createdAt: DateTime.now(),
     );
   }
+
+  /// Lấy bảng màu sắc giao diện tương ứng với tông màu khách hàng đã chọn
+  TarotColorPalette get palette => TarotColorPalette.fromName(favoriteColor);
 
   /// Sao chép với các trường thay đổi
   CustomerProfile copyWith({
@@ -129,38 +133,68 @@ class CustomerProfile {
 
   /// Tự động gợi ý lá bài Tarot kinh điển phù hợp nhất với phong cách và tông màu
   TarotPreset get suggestedPreset {
-    // 1. Phân loại lá bài đại diện cơ sở theo 20 phong cách
+    // 1. Phân loại lá bài đại diện cơ sở theo 20 phong cách nghệ thuật
     TarotPreset basePreset;
     switch (style) {
       case 'Hoàng gia':
-      case 'Baroque tráng lệ':
         basePreset = TarotDeckData.theEmperor;
         break;
       case 'Thiên nhiên':
-      case 'Nghệ thuật Nouveau':
-      case 'Rừng nhiệt đới':
-      case 'Cổ tích Châu Âu':
         basePreset = TarotDeckData.theEmpress;
         break;
       case 'Cổ điển':
-      case 'Phù thủy dân gian':
-      case 'Ai Cập cổ đại':
-      case 'Cyberpunk huyền huyễn':
-      case 'Phương Đông huyền bí':
         basePreset = TarotDeckData.theMagician;
         break;
       case 'Huyền bí':
-      case 'Gothic tối':
-      case 'Đại dương huyền bí':
-      case 'Hoàng hôn sa mạc':
         basePreset = TarotDeckData.theMoon;
         break;
       case 'Tối giản':
-      case 'Thủy mặc tối giản':
-      case 'Thiên hà vũ trụ':
-      case 'Băng giá phương Bắc':
-      case 'Hiện đại tối giản neon':
         basePreset = TarotDeckData.theStar;
+        break;
+      case 'Gothic tối':
+        basePreset = TarotDeckData.gothicDark;
+        break;
+      case 'Nghệ thuật Nouveau':
+        basePreset = TarotDeckData.artNouveau;
+        break;
+      case 'Phù thủy dân gian':
+        basePreset = TarotDeckData.witchcraftFolk;
+        break;
+      case 'Phương Đông huyền bí':
+        basePreset = TarotDeckData.orientalMystic;
+        break;
+      case 'Ai Cập cổ đại':
+        basePreset = TarotDeckData.egyptianAncient;
+        break;
+      case 'Thiên hà vũ trụ':
+        basePreset = TarotDeckData.cosmicGalaxy;
+        break;
+      case 'Cyberpunk huyền huyễn':
+        basePreset = TarotDeckData.cyberpunkMystic;
+        break;
+      case 'Baroque tráng lệ':
+        basePreset = TarotDeckData.baroqueGrand;
+        break;
+      case 'Thủy mặc tối giản':
+        basePreset = TarotDeckData.inkWashMinimal;
+        break;
+      case 'Rừng nhiệt đới':
+        basePreset = TarotDeckData.tropicalForest;
+        break;
+      case 'Đại dương huyền bí':
+        basePreset = TarotDeckData.oceanMystic;
+        break;
+      case 'Hoàng hôn sa mạc':
+        basePreset = TarotDeckData.egyptianAncient;
+        break;
+      case 'Băng giá phương Bắc':
+        basePreset = TarotDeckData.cosmicGalaxy;
+        break;
+      case 'Cổ tích Châu Âu':
+        basePreset = TarotDeckData.artNouveau;
+        break;
+      case 'Hiện đại tối giản neon':
+        basePreset = TarotDeckData.cyberpunkMystic;
         break;
       default:
         if (theme.contains('Hoa lá')) {
@@ -174,8 +208,14 @@ class CustomerProfile {
         }
     }
 
-    // 2. Tông màu sắc điều hướng biến thể lá bài:
-    // Giúp khách khi đổi màu có thể nhận được lá bài tương ứng với năng lượng màu sắc
+    // 2. Tông màu sắc điều hướng biến thể lá bài cho 5 nhóm cơ sở:
+    // Giúp khách khi đổi màu có thể nhận được lá bài tương ứng với năng lượng màu sắc,
+    // trong khi 15 phong cách chuyên sâu luôn giữ bức tranh đặc trưng của riêng mình.
+    const base5Styles = {'Hoàng gia', 'Thiên nhiên', 'Cổ điển', 'Huyền bí', 'Tối giản'};
+    if (!base5Styles.contains(style)) {
+      return basePreset;
+    }
+
     switch (favoriteColor) {
       case 'Đen Tuyền & Đỏ Máu':
         if (basePreset == TarotDeckData.theStar || basePreset == TarotDeckData.theMoon) {

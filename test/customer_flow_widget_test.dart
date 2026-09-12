@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarot_forge/features/card_designer/presentation/providers/card_designer_provider.dart';
+import 'package:tarot_forge/features/customer_profile/presentation/providers/customer_profile_provider.dart';
 import 'package:tarot_forge/features/customer_profile/presentation/screens/customer_profile_screen.dart';
 
 void main() {
@@ -238,9 +239,52 @@ void main() {
       await tester.pump(const Duration(milliseconds: 600));
 
       final activeCard = container.read(cardDesignerProvider);
-      expect(activeCard.name, 'HOÀNG ĐẾ');
-      expect(activeCard.romanNumeral, 'IV');
+      expect(activeCard.name, 'CÁI CHẾT');
+      expect(activeCard.romanNumeral, 'XIII');
       expect(activeCard.templateId, 'full_bleed_art');
+      expect(activeCard.assetImagePath, 'assets/images/gothic_dark.jpg');
+
+      final customerProfile = container.read(customerProfileProvider);
+      expect(customerProfile.favoriteColor, 'Đen Tuyền & Đỏ Máu');
+      expect(customerProfile.palette.name, 'Đen Tuyền & Đỏ Máu');
+      expect(customerProfile.palette.getAccent(true), const Color(0xFFFF4D4F));
+    });
+
+    testWidgets('Selecting color palette "Bạc Tinh Tú & Xanh Băng" dynamically updates accentColor',
+        (tester) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            home: CustomerProfileScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Select color Bạc Tinh Tú & Xanh Băng
+      final colorItem = find.text('Bạc Tinh Tú & Xanh Băng');
+      expect(colorItem, findsOneWidget);
+      await tester.ensureVisible(colorItem);
+      await tester.pumpAndSettle();
+      await tester.tap(colorItem);
+      await tester.pumpAndSettle();
+
+      // Start design
+      final startButton = find.text('BẮT ĐẦU THIẾT KẾ BÀI');
+      await tester.ensureVisible(startButton);
+      await tester.pumpAndSettle();
+      await tester.tap(startButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      final customerProfile = container.read(customerProfileProvider);
+      expect(customerProfile.favoriteColor, 'Bạc Tinh Tú & Xanh Băng');
+      expect(customerProfile.palette.getAccent(true), const Color(0xFF74C0FC));
+      expect(customerProfile.palette.getAccent(false), const Color(0xFF1971C2));
     });
   });
 }

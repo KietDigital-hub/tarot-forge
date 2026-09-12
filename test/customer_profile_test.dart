@@ -177,5 +177,81 @@ void main() {
       expect(prompt, contains('seraphic divine wings, sacred halos, angelic light beams'));
       expect(prompt, contains('Constraints: Genuine tarot artwork only, no modern photorealism, no cartoon, no anime'));
     });
+
+    test('All 20 artistic styles map to diverse distinct artwork assets (at least 15 distinct images)', () {
+      const allStyles = [
+        'Huyền bí', 'Cổ điển', 'Tối giản', 'Hoàng gia', 'Thiên nhiên',
+        'Gothic tối', 'Nghệ thuật Nouveau', 'Phù thủy dân gian', 'Phương Đông huyền bí', 'Ai Cập cổ đại',
+        'Thiên hà vũ trụ', 'Cyberpunk huyền huyễn', 'Baroque tráng lệ', 'Thủy mặc tối giản', 'Rừng nhiệt đới',
+        'Đại dương huyền bí', 'Hoàng hôn sa mạc', 'Băng giá phương Bắc', 'Cổ tích Châu Âu', 'Hiện đại tối giản neon'
+      ];
+
+      final distinctImagePaths = <String>{};
+      for (final s in allStyles) {
+        final p = CustomerProfile(
+          name: 'Test',
+          style: s,
+          favoriteColor: 'Vàng Kim & Chàm Tím',
+          theme: 'Thiên văn & Tinh tú',
+          notes: '',
+          createdAt: DateTime.now(),
+        );
+        distinctImagePaths.add(p.suggestedPreset.assetImagePath);
+      }
+
+      // Assert at least 15 distinct images are mapped across the 20 styles
+      expect(distinctImagePaths.length, greaterThanOrEqualTo(15));
+
+      // Assert specific specialized styles map to their dedicated images
+      final gothic = CustomerProfile.defaultProfile().copyWith(style: 'Gothic tối');
+      expect(gothic.suggestedPreset.assetImagePath, 'assets/images/gothic_dark.jpg');
+
+      final egyptian = CustomerProfile.defaultProfile().copyWith(style: 'Ai Cập cổ đại');
+      expect(egyptian.suggestedPreset.assetImagePath, 'assets/images/egyptian_ancient.jpg');
+
+      final cyberpunk = CustomerProfile.defaultProfile().copyWith(style: 'Cyberpunk huyền huyễn');
+      expect(cyberpunk.suggestedPreset.assetImagePath, 'assets/images/cyberpunk_mystic.jpg');
+
+      final nouveau = CustomerProfile.defaultProfile().copyWith(style: 'Nghệ thuật Nouveau');
+      expect(nouveau.suggestedPreset.assetImagePath, 'assets/images/art_nouveau.jpg');
+
+      final oriental = CustomerProfile.defaultProfile().copyWith(style: 'Phương Đông huyền bí');
+      expect(oriental.suggestedPreset.assetImagePath, 'assets/images/oriental_mystic.jpg');
+
+      final ink = CustomerProfile.defaultProfile().copyWith(style: 'Thủy mặc tối giản');
+      expect(ink.suggestedPreset.assetImagePath, 'assets/images/ink_wash_minimal.jpg');
+
+      final ocean = CustomerProfile.defaultProfile().copyWith(style: 'Đại dương huyền bí');
+      expect(ocean.suggestedPreset.assetImagePath, 'assets/images/ocean_mystic.jpg');
+    });
+
+    test('All 12 color palettes provide distinct dynamic accent colors and readable contrast', () {
+      const allColors = [
+        'Vàng Kim & Chàm Tím', 'Đỏ Nhung & Đen Huyền', 'Xanh Ngọc & Đồng Cổ', 'Bạc Tinh Tú & Xanh Băng',
+        'Cam Hoàng Hôn & Nâu Đất', 'Hồng Phấn & Bạc', 'Tím Than & Xanh Lá Đậm', 'Trắng Ngà & Vàng Nhạt',
+        'Đen Tuyền & Đỏ Máu', 'Xanh Dương Hoàng Gia & Vàng Đồng', 'Xanh Lục Rừng & Nâu Gỗ', 'Cầu Vồng Ánh Kim & Trắng'
+      ];
+
+      final darkAccents = <int>{};
+      for (final c in allColors) {
+        final p = CustomerProfile.defaultProfile().copyWith(favoriteColor: c);
+        final palette = p.palette;
+        expect(palette.name, c);
+
+        final darkAccent = palette.getAccent(true);
+        final lightAccent = palette.getAccent(false);
+
+        // Dark accent must be vibrant and legible on dark backgrounds
+        expect(darkAccent.computeLuminance(), greaterThan(0.15));
+
+        // Light accent must have good contrast on light backgrounds (not washed out)
+        expect(lightAccent.computeLuminance(), lessThan(0.55));
+
+        darkAccents.add(darkAccent.toARGB32());
+      }
+
+      // All 12 color choices must have distinct accent values
+      expect(darkAccents.length, 12);
+    });
   });
 }

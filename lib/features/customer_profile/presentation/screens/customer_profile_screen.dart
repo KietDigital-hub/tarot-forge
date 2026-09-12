@@ -8,6 +8,8 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/mystic_particles.dart';
 import '../../../card_designer/presentation/providers/card_designer_provider.dart';
 import '../../../card_designer/presentation/screens/card_designer_screen.dart';
+import '../../../deck_manager/presentation/providers/deck_provider.dart';
+import '../../../deck_manager/presentation/screens/deck_manager_screen.dart';
 import '../../domain/models/customer_profile.dart';
 import '../providers/customer_profile_provider.dart';
 
@@ -187,6 +189,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
       final cardNotifier = ref.read(cardDesignerProvider.notifier);
       cardNotifier.selectTemplate(suggestedTemplate);
       cardNotifier.applyPreset(suggestedPreset);
+      ref.read(deckProvider.notifier).applyTemplateToAll(suggestedTemplate);
 
       // 3. Kiểm tra xem khách đã lưu Gemini API key trên thiết bị chưa
       final apiKey = await GeminiApiKeyStore.load();
@@ -450,6 +453,18 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
           style: AppTypography.screenTitle(isDark: isDark),
         ),
         actions: [
+          // Deck Manager Screen
+          IconButton(
+            tooltip: 'Xem trọn bộ 78 lá bài',
+            icon: Icon(Icons.grid_view_rounded, color: gold),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const DeckManagerScreen(),
+                ),
+              );
+            },
+          ),
           // Theme Toggle
           IconButton(
             tooltip: isDark ? 'Giao diện sáng' : 'Giao diện tối',

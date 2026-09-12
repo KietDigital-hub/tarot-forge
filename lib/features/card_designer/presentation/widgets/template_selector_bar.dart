@@ -9,13 +9,19 @@ import '../providers/card_designer_provider.dart';
 /// the 4 tarot card templates with real-time feedback.
 class TemplateSelectorBar extends ConsumerWidget {
   final bool isDark;
+  final Color? accentColor;
 
-  const TemplateSelectorBar({super.key, required this.isDark});
+  const TemplateSelectorBar({
+    super.key,
+    required this.isDark,
+    this.accentColor,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCard = ref.watch(cardDesignerProvider);
     final activeId = selectedCard.templateId;
+    final gold = accentColor ?? (isDark ? AppColors.goldPrimary : AppColors.lightGoldPrimary);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +33,7 @@ class TemplateSelectorBar extends ConsumerWidget {
               Icon(
                 Icons.auto_awesome,
                 size: 14,
-                color: isDark ? AppColors.goldPrimary : AppColors.lightGoldPrimary,
+                color: gold,
               ),
               const SizedBox(width: 6),
               Text(
@@ -47,8 +53,6 @@ class TemplateSelectorBar extends ConsumerWidget {
             itemBuilder: (context, index) {
               final template = CardTemplate.allTemplates[index];
               final isSelected = template.id == activeId;
-
-              final gold = isDark ? AppColors.goldPrimary : AppColors.lightGoldPrimary;
 
               return InkWell(
                 onTap: () {
