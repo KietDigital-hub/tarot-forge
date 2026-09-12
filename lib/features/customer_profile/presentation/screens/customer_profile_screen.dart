@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/constants/tarot_deck_data.dart';
+import '../../../../core/services/gemini_api_key_store.dart';
+import '../../../../core/services/gemini_image_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../card_designer/presentation/providers/card_designer_provider.dart';
 import '../../../card_designer/presentation/screens/card_designer_screen.dart';
+import '../../domain/models/customer_profile.dart';
 import '../providers/customer_profile_provider.dart';
 
 /// Màn hình khởi đầu (Bước 1): Khách hàng nhập thông tin và sở thích thiết kế bộ bài.
@@ -22,6 +26,8 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
   late String _selectedStyle;
   late String _selectedColor;
   late String _selectedTheme;
+
+  bool _isLoading = false;
 
   final List<Map<String, String>> _styleOptions = const [
     {'name': 'Huyền bí', 'icon': '🔮', 'desc': 'Biểu tượng chiêm tinh & ma thuật'},
@@ -80,32 +86,264 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
     super.dispose();
   }
 
-  void _handleStartDesign() {
-    final name = _nameController.text.trim().isEmpty
-        ? 'Nhà Chiêm Tinh'
-        : _nameController.text.trim();
+  Future<void> _handleStartDesign() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
 
-    // 1. Lưu hồ sơ khách hàng
-    final updatedProfile = ref.read(customerProfileProvider).copyWith(
-          name: name,
-          style: _selectedStyle,
-          favoriteColor: _selectedColor,
-          theme: _selectedTheme,
-          notes: _notesController.text.trim(),
+    try {
+      final name = _nameController.text.trim().isEmpty
+          ? 'Nhà Chiêm Tinh'
+          : _nameController.text.trim();
+
+      // 1. Lưu hồ sơ khách hàng
+      final updatedProfile = ref.read(customerProfileProvider).copyWith(
+            name: name,
+            style: _selectedStyle,
+            favoriteColor: _selectedColor,
+            theme: _selectedTheme,
+            notes: _notesController.text.trim(),
+          );
+
+      ref.read(customerProfileProvider.notifier).saveProfile(updatedProfile);
+
+      // 2. Tự động gợi ý template và lá bài kinh điển phù hợp
+      final suggestedTemplate = updatedProfile.suggestedTemplateId;
+      final suggestedPreset = updatedProfile.suggestedPreset;
+
+      final cardNotifier = ref.read(cardDesignerProvider.notifier);
+      cardNotifier.selectTemplate(suggestedTemplate);
+      cardNotifier.applyPreset(suggestedPreset);
+
+      // 3. Kiểm tra xem khách đã lưu Gemini API key trên thiết bị chưa
+      final apiKey = await GeminiApiKeyStore.load();
+
+      if (!mounted) return;
+
+      if (apiKey != null && apiKey.isNotEmpty) {
+        // Khách ĐÃ CÓ API key: Triệu hồi Gemini AI tạo ảnh độc bản luôn
+        await _generateAiImageAndNavigate(
+          apiKey: apiKey,
+          profile: updatedProfile,
+          preset: suggestedPreset,
         );
+      } else {
+        // Khách CHƯA CÓ API key: Điều hướng ngay với tranh mẫu & gợi ý tạo bằng AI
+        _navigateToDesigner();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '✨ Đã áp dụng lá "${suggestedPreset.name}" & khung viền "${_getTemplateName(suggestedTemplate)}". Bạn có thể vào "Hình ảnh" > "Tạo bằng AI" để vẽ tranh riêng bất cứ lúc nào!',
+              style: const TextStyle(fontFamily: 'Outfit'),
+            ),
+            backgroundColor: AppColors.goldDark,
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'ĐÃ HIỂU',
+              textColor: Colors.white,
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
-    ref.read(customerProfileProvider.notifier).saveProfile(updatedProfile);
+  Future<void> _generateAiImageAndNavigate({
+    required String apiKey,
+    required CustomerProfile profile,
+    required TarotPreset preset,
+  }) async {
+    final themeMode = ref.read(themeModeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+    final gold = isDark ? AppColors.goldPrimary : AppColors.lightGoldPrimary;
 
-    // 2. Tự động gợi ý và kích hoạt template tương ứng
-    final suggestedTemplate = updatedProfile.suggestedTemplateId;
-    ref.read(cardDesignerProvider.notifier).selectTemplate(suggestedTemplate);
+    bool cancelled = false;
 
-    // 3. Chuyển tiếp sang màn hình Card Designer
+    // Hiển thị hộp thoại loading huyền ảo
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            backgroundColor:
+                isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: gold.withValues(alpha: 0.4)),
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 64,
+                        height: 64,
+                        child: CircularProgressIndicator(
+                          color: gold,
+                          strokeWidth: 3,
+                        ),
+                      ),
+                      Icon(Icons.auto_awesome, color: gold, size: 28),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'ĐANG TRIỆU HỒI GEMINI AI',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Cinzel',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.5,
+                      color: gold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Đang sáng tạo bức họa độc bản cho lá "${preset.name}" theo sở thích của bạn...',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.body(isDark: isDark, fontSize: 13),
+                  ),
+                  const SizedBox(height: 20),
+                  OutlinedButton(
+                    onPressed: () {
+                      cancelled = true;
+                      Navigator.of(dialogCtx).pop();
+                      _navigateToDesigner();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Đã dùng tranh mẫu "${preset.name}". Bạn có thể tạo ảnh AI sau trong mục "Hình ảnh".',
+                            style: const TextStyle(fontFamily: 'Outfit'),
+                          ),
+                          backgroundColor: gold,
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: gold.withValues(alpha: 0.4)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'BỎ QUA & VÀO THIẾT KẾ NGAY',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    final prompt = profile.buildTarotPrompt(
+      cardName: preset.name,
+      userDescription: profile.notes.isNotEmpty
+          ? profile.notes
+          : 'Archetype for ${preset.name}, theme: ${profile.theme}',
+    );
+
+    try {
+      final bytes = await GeminiImageService.generateTarotImage(
+        apiKey: apiKey,
+        prompt: prompt,
+      );
+
+      if (!mounted || cancelled) return;
+
+      // Đóng dialog loading
+      Navigator.of(context, rootNavigator: true).pop();
+
+      // Cập nhật ảnh AI vào lá bài
+      ref.read(cardDesignerProvider.notifier).setCustomImage(
+            bytes,
+            'AI_${preset.name.replaceAll(' ', '_')}.jpg',
+          );
+
+      _navigateToDesigner();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '✨ Trí tuệ nhân tạo Gemini đã dệt xong tranh cho lá "${preset.name}"!',
+                  style: const TextStyle(
+                      fontFamily: 'Outfit', fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.goldDark,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    } catch (e) {
+      if (!mounted || cancelled) return;
+
+      // Đóng dialog loading
+      Navigator.of(context, rootNavigator: true).pop();
+
+      _navigateToDesigner();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Không thể tạo ảnh AI (${e.toString()}). Đã dùng tranh mẫu "${preset.name}".',
+            style: const TextStyle(fontFamily: 'Outfit'),
+          ),
+          backgroundColor: Colors.orange.shade800,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    }
+  }
+
+  void _navigateToDesigner() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const CardDesignerScreen(),
       ),
     );
+  }
+
+  String _getTemplateName(String id) {
+    switch (id) {
+      case 'classic_arcana':
+        return 'Classic Arcana';
+      case 'celestial_mystic':
+        return 'Celestial Mystic';
+      case 'minimalist_alchemy':
+        return 'Minimalist Alchemy';
+      case 'full_bleed_art':
+        return 'Full-Bleed Art';
+      default:
+        return id;
+    }
   }
 
   @override
@@ -469,9 +707,24 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton.icon(
-                  onPressed: _handleStartDesign,
-                  icon: const Icon(Icons.arrow_forward, size: 20),
-                  label: const Text('BẮT ĐẦU THIẾT KẾ BÀI'),
+                  onPressed: _isLoading ? null : _handleStartDesign,
+                  icon: _isLoading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: isDark
+                                ? AppColors.darkBackground
+                                : Colors.white,
+                          ),
+                        )
+                      : const Icon(Icons.arrow_forward, size: 20),
+                  label: Text(
+                    _isLoading
+                        ? 'ĐANG KHỞI TẠO BỘ BÀI...'
+                        : 'BẮT ĐẦU THIẾT KẾ BÀI',
+                  ),
                 ),
               ),
 

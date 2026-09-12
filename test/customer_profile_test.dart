@@ -36,6 +36,49 @@ void main() {
       expect(mystic.suggestedTemplateId, 'celestial_mystic');
     });
 
+    test('Correctly maps customer styles & themes to distinct Tarot presets', () {
+      final now = DateTime.now();
+
+      final royal = CustomerProfile(
+        name: 'Vương Giả',
+        style: 'Hoàng gia',
+        favoriteColor: 'Đỏ Nhung & Đen Huyền',
+        theme: 'Thần thoại cổ đại',
+        notes: '',
+        createdAt: now,
+      );
+      expect(royal.suggestedPreset.romanNumeral, 'IV');
+      expect(royal.suggestedPreset.name, 'HOÀNG ĐẾ');
+      expect(royal.suggestedPreset.assetImagePath, 'assets/images/the_emperor.jpg');
+
+      final nature = royal.copyWith(style: 'Thiên nhiên');
+      expect(nature.suggestedPreset.romanNumeral, 'III');
+      expect(nature.suggestedPreset.name, 'NỮ HOÀNG');
+      expect(nature.suggestedPreset.assetImagePath, 'assets/images/the_empress.jpg');
+
+      final classic = royal.copyWith(style: 'Cổ điển');
+      expect(classic.suggestedPreset.romanNumeral, 'I');
+      expect(classic.suggestedPreset.name, 'PHÁP SƯ');
+      expect(classic.suggestedPreset.assetImagePath, 'assets/images/the_magician.jpg');
+
+      final mystic = royal.copyWith(style: 'Huyền bí');
+      expect(mystic.suggestedPreset.romanNumeral, 'XVIII');
+      expect(mystic.suggestedPreset.name, 'MẶT TRĂNG');
+      expect(mystic.suggestedPreset.assetImagePath, 'assets/images/the_moon.jpg');
+
+      final minimal = royal.copyWith(style: 'Tối giản');
+      expect(minimal.suggestedPreset.romanNumeral, 'XVII');
+      expect(minimal.suggestedPreset.name, 'NGÔI SAO');
+      expect(minimal.suggestedPreset.assetImagePath, 'assets/images/the_star.jpg');
+
+      // Theme fallbacks when style is custom
+      final customNature = royal.copyWith(style: 'Tự do', theme: 'Hoa lá & Thảo mộc');
+      expect(customNature.suggestedPreset.name, 'NỮ HOÀNG');
+
+      final customWitch = royal.copyWith(style: 'Tự do', theme: 'Phù thủy & Huyền thuật');
+      expect(customWitch.suggestedPreset.name, 'PHÁP SƯ');
+    });
+
     test('buildTarotPrompt generates authentic tarot occult prompt with strict constraints', () {
       final profile = CustomerProfile(
         name: 'Linh Đan',

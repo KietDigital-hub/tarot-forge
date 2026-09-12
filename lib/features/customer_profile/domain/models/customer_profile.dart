@@ -1,3 +1,5 @@
+import '../../../../core/constants/tarot_deck_data.dart';
+
 /// Định nghĩa mô hình thông tin khách hàng và sở thích thiết kế bộ bài Tarot.
 class CustomerProfile {
   final String name;
@@ -63,6 +65,31 @@ class CustomerProfile {
         if (theme.contains('Thiên văn')) return 'celestial_mystic';
         if (theme.contains('Hoa lá')) return 'full_bleed_art';
         return 'classic_arcana';
+    }
+  }
+
+  /// Tự động gợi ý lá bài Tarot kinh điển phù hợp nhất với sở thích và phong cách của khách
+  TarotPreset get suggestedPreset {
+    switch (style) {
+      case 'Hoàng gia':
+        return TarotDeckData.theEmperor;
+      case 'Thiên nhiên':
+        return TarotDeckData.theEmpress;
+      case 'Cổ điển':
+        return TarotDeckData.theMagician;
+      case 'Huyền bí':
+        return TarotDeckData.theMoon;
+      case 'Tối giản':
+        return TarotDeckData.theStar;
+      default:
+        // Nếu phong cách tùy biến, xét theo chủ đề:
+        if (theme.contains('Hoa lá')) return TarotDeckData.theEmpress;
+        if (theme.contains('Phù thủy')) return TarotDeckData.theMagician;
+        if (theme.contains('Thần thoại')) return TarotDeckData.theMoon;
+        if (theme.contains('Thiên văn') || theme.contains('Thiên thần')) {
+          return TarotDeckData.theStar;
+        }
+        return TarotDeckData.theStar;
     }
   }
 
