@@ -181,5 +181,66 @@ void main() {
       expect(activeCard.templateId, 'minimalist_alchemy');
       expect(activeCard.assetImagePath, 'assets/images/the_star.jpg');
     });
+
+    testWidgets('Section 5 displays note about Gemini API key requirement',
+        (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: CustomerProfileScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      final noteFinder = find.text(
+        '(Lưu ý: nội dung này chỉ ảnh hưởng đến ảnh khi bạn đã gắn API key AI ở bước sau — chưa gắn API key thì ghi gì cũng chưa có tác dụng)',
+      );
+      expect(noteFinder, findsOneWidget);
+    });
+
+    testWidgets('Selecting "Gothic tối" and "Đen Tuyền & Đỏ Máu" applies custom card design',
+        (tester) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            home: CustomerProfileScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Select Gothic tối
+      final gothicChip = find.text('Gothic tối');
+      expect(gothicChip, findsOneWidget);
+      await tester.tap(gothicChip);
+      await tester.pumpAndSettle();
+
+      // Select color Đen Tuyền & Đỏ Máu
+      final colorItem = find.text('Đen Tuyền & Đỏ Máu');
+      expect(colorItem, findsOneWidget);
+      await tester.ensureVisible(colorItem);
+      await tester.pumpAndSettle();
+      await tester.tap(colorItem);
+      await tester.pumpAndSettle();
+
+      // Start design
+      final startButton = find.text('BẮT ĐẦU THIẾT KẾ BÀI');
+      await tester.ensureVisible(startButton);
+      await tester.pumpAndSettle();
+      await tester.tap(startButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      final activeCard = container.read(cardDesignerProvider);
+      expect(activeCard.name, 'HOÀNG ĐẾ');
+      expect(activeCard.romanNumeral, 'IV');
+      expect(activeCard.templateId, 'full_bleed_art');
+    });
   });
 }

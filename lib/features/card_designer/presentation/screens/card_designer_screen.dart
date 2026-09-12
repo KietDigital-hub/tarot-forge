@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/gold_shimmer_border.dart';
+import '../../../../core/widgets/mystic_particles.dart';
 import '../../../../core/widgets/tilt_card_container.dart';
 import '../providers/card_designer_provider.dart';
 import '../widgets/card_canvas_preview.dart';
@@ -85,206 +86,208 @@ class CardDesignerScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Customer Profile Badge Bar
-            InkWell(
-              onTap: () {
-                Navigator.of(context).maybePop();
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkSurfaceVariant
-                      : AppColors.lightSurfaceVariant,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: gold.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.person_outline, size: 15, color: gold),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text.rich(
-                        TextSpan(
-                          text: 'Bộ bài: ',
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 11.5,
-                            color: isDark
-                                ? AppColors.darkTextMuted
-                                : AppColors.lightTextMuted,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: customerProfile.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? AppColors.darkTextPrimary
-                                    : AppColors.lightTextPrimary,
-                              ),
-                            ),
-                            TextSpan(
-                              text: '  •  ${customerProfile.style}  •  ${customerProfile.favoriteColor}',
-                              style: TextStyle(
-                                color: gold,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Tooltip(
-                      message: 'Sửa hồ sơ khách hàng',
-                      child: Icon(Icons.edit_outlined, size: 14, color: gold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // Hero Card Preview Stage
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: MysticParticlesOverlay(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Customer Profile Badge Bar
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).maybePop();
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightSurfaceVariant,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: gold.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
                     children: [
-                      // Interactive 3D Card
-                      Flexible(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxHeight: 460,
-                            maxWidth: 270,
-                          ),
-                          child: TiltCardContainer(
-                            borderRadius: BorderRadius.circular(14),
-                            child: GoldShimmerBorder(
-                              borderRadius: BorderRadius.circular(14),
-                              borderWidth: 2.0,
-                              child: CardCanvasPreview(
-                                card: activeCard,
-                                isDark: isDark,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // Tactile hint label
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.touch_app_outlined,
-                            size: 13,
-                            color: isDark
-                                ? AppColors.darkTextMuted
-                                : AppColors.lightTextMuted,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'Kéo hoặc di chuột để xoay lá bài 3D',
+                      Icon(Icons.person_outline, size: 15, color: gold),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            text: 'Bộ bài: ',
                             style: TextStyle(
                               fontFamily: 'Outfit',
-                              fontSize: 11,
+                              fontSize: 11.5,
                               color: isDark
                                   ? AppColors.darkTextMuted
                                   : AppColors.lightTextMuted,
                             ),
+                            children: [
+                              TextSpan(
+                                text: customerProfile.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '  •  ${customerProfile.style}  •  ${customerProfile.favoriteColor}',
+                                style: TextStyle(
+                                  color: gold,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Tooltip(
+                        message: 'Sửa hồ sơ khách hàng',
+                        child: Icon(Icons.edit_outlined, size: 14, color: gold),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-
-            // Bottom Control Dock
-            Container(
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                border: Border(
-                  top: BorderSide(
-                    color: gold.withValues(alpha: 0.3),
-                    width: 1.0,
-                  ),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
-                    blurRadius: 16,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 8),
-                  // Template Selector Bar
-                  TemplateSelectorBar(isDark: isDark),
-
-                  const SizedBox(height: 6),
-
-                  // Quick Action Toolbar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                    child: Row(
+              // Hero Card Preview Stage
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Edit Inscription Button
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => CardTextEditorSheet.show(context, isDark),
-                            icon: const Icon(Icons.edit_note, size: 18),
-                            label: const Text('VĂN BẢN'),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
+                        // Interactive 3D Card
+                        Flexible(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxHeight: 460,
+                              maxWidth: 270,
+                            ),
+                            child: TiltCardContainer(
+                              borderRadius: BorderRadius.circular(14),
+                              child: GoldShimmerBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderWidth: 2.0,
+                                child: CardCanvasPreview(
+                                  card: activeCard,
+                                  isDark: isDark,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-
-                        // Change Artwork Button
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => ImagePickerSheet.show(context, isDark),
-                            icon: const Icon(Icons.photo_library_outlined, size: 18),
-                            label: const Text('HÌNH ẢNH'),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
+                        const SizedBox(height: 12),
+                        // Tactile hint label
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.touch_app_outlined,
+                              size: 13,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextMuted,
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-
-                        // Export Button
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () => ExportActionSheet.show(context, isDark),
-                            icon: const Icon(Icons.print_outlined, size: 18),
-                            label: const Text('XUẤT FILE'),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Kéo hoặc di chuột để xoay lá bài 3D',
+                              style: TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 11,
+                                color: isDark
+                                    ? AppColors.darkTextMuted
+                                    : AppColors.lightTextMuted,
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+
+              // Bottom Control Dock
+              Container(
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  border: Border(
+                    top: BorderSide(
+                      color: gold.withValues(alpha: 0.3),
+                      width: 1.0,
+                    ),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+                      blurRadius: 16,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 8),
+                    // Template Selector Bar
+                    TemplateSelectorBar(isDark: isDark),
+
+                    const SizedBox(height: 6),
+
+                    // Quick Action Toolbar
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                      child: Row(
+                        children: [
+                          // Edit Inscription Button
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () => CardTextEditorSheet.show(context, isDark),
+                              icon: const Icon(Icons.edit_note, size: 18),
+                              label: const Text('VĂN BẢN'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+
+                          // Change Artwork Button
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () => ImagePickerSheet.show(context, isDark),
+                              icon: const Icon(Icons.photo_library_outlined, size: 18),
+                              label: const Text('HÌNH ẢNH'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+
+                          // Export Button
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () => ExportActionSheet.show(context, isDark),
+                              icon: const Icon(Icons.print_outlined, size: 18),
+                              label: const Text('XUẤT FILE'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
