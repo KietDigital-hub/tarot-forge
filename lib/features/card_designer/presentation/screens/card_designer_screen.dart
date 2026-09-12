@@ -11,6 +11,7 @@ import '../widgets/export_action_sheet.dart';
 import '../widgets/image_picker_sheet.dart';
 import '../widgets/template_selector_bar.dart';
 import '../../../help/presentation/screens/help_guide_screen.dart';
+import '../../../customer_profile/presentation/providers/customer_profile_provider.dart';
 
 /// Primary screen for Phase 1: Interactive Tarot Card Designer.
 class CardDesignerScreen extends ConsumerWidget {
@@ -20,6 +21,7 @@ class CardDesignerScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeCard = ref.watch(cardDesignerProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final customerProfile = ref.watch(customerProfileProvider);
     final isDark = themeMode == ThemeMode.dark;
 
     final gold = isDark ? AppColors.goldPrimary : AppColors.lightGoldPrimary;
@@ -86,6 +88,67 @@ class CardDesignerScreen extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
+            // Customer Profile Badge Bar
+            InkWell(
+              onTap: () {
+                Navigator.of(context).maybePop();
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSurfaceVariant,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: gold.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.person_outline, size: 15, color: gold),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Bộ bài: ',
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 11.5,
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextMuted,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: customerProfile.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '  •  ${customerProfile.style}  •  ${customerProfile.favoriteColor}',
+                              style: TextStyle(
+                                color: gold,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Tooltip(
+                      message: 'Sửa hồ sơ khách hàng',
+                      child: Icon(Icons.edit_outlined, size: 14, color: gold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             // Hero Card Preview Stage
             Expanded(
               child: Center(

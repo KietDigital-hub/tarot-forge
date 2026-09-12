@@ -27,9 +27,10 @@ class HelpGuideScreen extends StatelessWidget {
         children: [
           Text(
             'Tarot Forge là công cụ tự thiết kế lá bài Tarot của riêng bạn — '
-            'chọn khung viền, viết nội dung, chọn hình minh họa, rồi xuất ra '
-            'file PDF chuẩn in ấn thật. Bản demo hiện tại thiết kế được 1 lá '
-            'bài tại một thời điểm.',
+            'nhập thông tin & sở thích của khách, chọn khung viền, viết nội '
+            'dung, chọn hoặc tạo hình minh họa bằng AI, rồi xuất ra file PDF '
+            'chuẩn in ấn thật. Bản demo hiện tại thiết kế được 1 lá bài tại '
+            'một thời điểm.',
             style: AppTypography.body(isDark: isDark, fontSize: 14),
           ),
           const SizedBox(height: 10),
@@ -47,19 +48,46 @@ class HelpGuideScreen extends StatelessWidget {
 
           _StepTile(
             number: 1,
+            title: 'Nhập thông tin khách hàng',
+            isDark: isDark,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Đây là màn hình đầu tiên khi mở app. Nhập tên khách hàng, '
+                  'chọn PHONG CÁCH NGHỆ THUẬT yêu thích (Huyền Bí, Cổ Điển, '
+                  'Tối Giản, Hoàng Gia, Thiên Nhiên), chọn TÔNG MÀU SẮC và '
+                  'CHỦ ĐỀ HÌNH TƯỢNG mong muốn, có thể ghi thêm tâm niệm '
+                  'riêng.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Bấm BẮT ĐẦU THIẾT KẾ BÀI — app sẽ tự gợi ý mẫu khung phù '
+                  'hợp với sở thích vừa chọn. Thông tin này cũng được dùng '
+                  'để cá nhân hóa ảnh AI sinh ra ở bước sau.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
+                ),
+              ],
+            ),
+          ),
+
+          _StepTile(
+            number: 2,
             title: 'Chọn mẫu khung lá bài',
             isDark: isDark,
             child: Text(
               'Thanh cuộn ngang phía dưới màn hình chính có 4 phong cách '
               'khung viền — chạm để chọn, lá bài ở giữa cập nhật ngay lập '
               'tức: Cổ Điển Huyền Bí, Thiên Thể Huyền Diệu, Giả Kim Tối '
-              'Giản, Nghệ Thuật Toàn Khung.',
+              'Giản, Nghệ Thuật Toàn Khung. Bấm vào thanh "Bộ bài: ..." ở '
+              'trên cùng nếu muốn quay lại sửa hồ sơ khách hàng.',
               style: AppTypography.body(isDark: isDark, fontSize: 13.5),
             ),
           ),
 
           _StepTile(
-            number: 2,
+            number: 3,
             title: 'Viết nội dung lá bài',
             isDark: isDark,
             child: Column(
@@ -84,19 +112,39 @@ class HelpGuideScreen extends StatelessWidget {
           ),
 
           _StepTile(
-            number: 3,
-            title: 'Chọn hình minh họa',
+            number: 4,
+            title: 'Chọn hoặc tạo hình minh họa bằng AI',
             isDark: isDark,
-            child: Text(
-              'Bấm nút HÌNH ẢNH — TẢI LÊN để dùng ảnh riêng của bạn (PNG, '
-              'JPG, WEBP độ phân giải cao), hoặc chọn từ THƯ VIỆN tranh '
-              'minh họa cổ điển có sẵn trong app.',
-              style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Bấm nút HÌNH ẢNH để mở 3 lựa chọn:',
+                  style: AppTypography.body(isDark: isDark, fontSize: 13.5),
+                ),
+                const SizedBox(height: 8),
+                _FieldRow(label: 'THƯ VIỆN', desc: 'Chọn nhanh từ tranh Major Arcana có sẵn.', isDark: isDark, gold: gold),
+                _FieldRow(label: 'TẢI TỪ MÁY', desc: 'Dùng ảnh riêng PNG, JPG, WEBP độ phân giải cao.', isDark: isDark, gold: gold),
+                _FieldRow(label: 'TẠO BẰNG AI', desc: 'Gõ mô tả, AI (Gemini) vẽ ảnh Tarot riêng cho lá bài.', isDark: isDark, gold: gold),
+                const SizedBox(height: 10),
+                Text(
+                  'Để dùng TẠO BẰNG AI: lần đầu app sẽ hỏi API key Gemini — '
+                  'lấy miễn phí tại aistudio.google.com, dán vào ô rồi bấm '
+                  'LƯU (key chỉ lưu trên máy/trình duyệt của bạn, không gửi '
+                  'lên đâu khác). Sau đó gõ mô tả ý tưởng (VD: "Nữ hoàng '
+                  'ngồi trên ngai vàng giữa rừng hoa hồng") và bấm TẠO ẢNH '
+                  'BẰNG AI (GEMINI). App sẽ tự ghép thêm phong cách/màu '
+                  'sắc/chủ đề đã chọn ở Bước 1 để AI luôn vẽ đúng phong '
+                  'cách bài Tarot, không lạc sang phong cách khác. Ưng ý '
+                  'thì bấm SỬ DỤNG ẢNH NÀY, chưa ưng thì bấm TẠO LẠI.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
+                ),
+              ],
             ),
           ),
 
           _StepTile(
-            number: 4,
+            number: 5,
             title: 'Xuất file in PDF',
             isDark: isDark,
             child: Column(
@@ -119,7 +167,7 @@ class HelpGuideScreen extends StatelessWidget {
           ),
 
           _StepTile(
-            number: 5,
+            number: 6,
             title: 'Xoay xem 3D & đổi giao diện',
             isDark: isDark,
             child: Text(
@@ -150,9 +198,10 @@ class HelpGuideScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Chưa có trong bản này, sẽ bổ sung sau: tạo hình bằng AI '
-                  'theo mô tả, quản lý trọn bộ 78 lá, tài khoản đăng nhập & '
-                  'đồng bộ, gói trả phí / mua credit AI.',
+                  'Chưa có trong bản này, sẽ bổ sung sau: quản lý trọn bộ '
+                  '78 lá cùng lúc, tài khoản đăng nhập & đồng bộ nhiều '
+                  'thiết bị, gói trả phí / mua credit AI. Mỗi lần gọi tạo '
+                  'ảnh AI dùng hạn mức miễn phí của chính API key bạn nhập.',
                   style: AppTypography.body(isDark: isDark, fontSize: 12.5),
                 ),
               ],

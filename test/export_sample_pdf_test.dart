@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tarot_forge/features/card_designer/domain/models/tarot_card.dart';
 import 'package:tarot_forge/features/card_designer/services/pdf_export_service.dart';
@@ -46,7 +45,9 @@ void main() {
     );
     await artifactFile.writeAsBytes(pdfBytes);
 
+    // ignore: avoid_print
     print('PDF successfully generated at: ${outputFile.absolute.path}');
+    // ignore: avoid_print
     print('Artifact PDF successfully generated at: ${artifactFile.absolute.path}');
   });
 }
