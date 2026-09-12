@@ -42,6 +42,8 @@ class HelpGuideScreen extends StatelessWidget {
               _SpecTag(text: 'BLEED 3 MM'),
               _SpecTag(text: '300 DPI'),
               _SpecTag(text: '4 MẪU KHUNG'),
+              _SpecTag(text: '20 PHONG CÁCH'),
+              _SpecTag(text: '12 TÔNG MÀU'),
             ],
           ),
           const SizedBox(height: 28),
@@ -55,17 +57,28 @@ class HelpGuideScreen extends StatelessWidget {
               children: [
                 Text(
                   'Đây là màn hình đầu tiên khi mở app. Nhập tên khách hàng, '
-                  'chọn PHONG CÁCH NGHỆ THUẬT yêu thích (Huyền Bí, Cổ Điển, '
-                  'Tối Giản, Hoàng Gia, Thiên Nhiên), chọn TÔNG MÀU SẮC và '
-                  'CHỦ ĐỀ HÌNH TƯỢNG mong muốn, có thể ghi thêm tâm niệm '
-                  'riêng.',
+                  'chọn 1 trong 20 PHONG CÁCH NGHỆ THUẬT yêu thích (Huyền '
+                  'Bí, Cổ Điển, Gothic, Ai Cập, Thiên Hà, Cyberpunk...), '
+                  'chọn 1 trong 12 TÔNG MÀU SẮC chủ đạo, và CHỦ ĐỀ HÌNH '
+                  'TƯỢNG mong muốn. Đổi phong cách hoặc đổi màu đều sẽ cho '
+                  'ra lá bài gợi ý khác nhau — không bị lặp lại y hệt nhau.',
                   style: AppTypography.body(isDark: isDark, fontSize: 13.5),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Bấm BẮT ĐẦU THIẾT KẾ BÀI — app sẽ tự gợi ý mẫu khung phù '
-                  'hợp với sở thích vừa chọn. Thông tin này cũng được dùng '
-                  'để cá nhân hóa ảnh AI sinh ra ở bước sau.',
+                  'Mục GHI CHÚ & TÂM NIỆM RIÊNG chỉ có tác dụng khi bạn đã '
+                  'lưu API key Gemini (xem Bước 4) — app dùng đúng nội dung '
+                  'bạn ghi làm mô tả để AI vẽ ảnh, nên nên ghi mô tả hình '
+                  'ảnh mong muốn thay vì ghi chú thông thường.',
+                  style: AppTypography.body(isDark: isDark, fontSize: 12.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Bấm BẮT ĐẦU THIẾT KẾ BÀI — app tự gợi ý mẫu khung + lá '
+                  'bài phù hợp với phong cách/màu vừa chọn. Nếu đã có API '
+                  'key, app còn tự gọi AI vẽ luôn ảnh minh họa riêng cho lá '
+                  'đó (hiện màn hình "Đang triệu hồi Gemini AI" trong lúc '
+                  'chờ, có thể bấm bỏ qua nếu muốn vào thiết kế ngay).',
                   style: AppTypography.body(isDark: isDark, fontSize: 12.5),
                 ),
               ],
